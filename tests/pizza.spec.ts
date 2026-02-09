@@ -16,19 +16,28 @@ async function basicInit(page: Page) {
 
   // Authorize login for the given user
   await page.route("*/**/api/auth", async (route) => {
-    const loginReq = route.request().postDataJSON();
-    const user = validUsers[loginReq.email];
-    if (!user || user.password !== loginReq.password) {
-      await route.fulfill({ status: 401, json: { error: "Unauthorized" } });
-      return;
+    if (route.request().method() === "PUT") {
+      const loginReq = route.request().postDataJSON();
+      const user = validUsers[loginReq.email];
+      if (!user || user.password !== loginReq.password) {
+        await route.fulfill({ status: 401, json: { error: "Unauthorized" } });
+        return;
+      }
+      loggedInUser = validUsers[loginReq.email];
+      const loginRes = {
+        user: loggedInUser,
+        token: "abcdef",
+      };
+      await route.fulfill({ json: loginRes });
+    } else if (route.request().method() === "POST") {
+      const registerReq = route.request().postDataJSON();
+      loggedInUser = validUsers[registerReq.email];
+      const registerRes = {
+        "user": validUsers[registerReq.email],
+        "token": "abcdef",
+      };
+      await route.fulfill({ json: registerRes });
     }
-    loggedInUser = validUsers[loginReq.email];
-    const loginRes = {
-      user: loggedInUser,
-      token: "abcdef",
-    };
-    expect(route.request().method()).toBe("PUT");
-    await route.fulfill({ json: loginRes });
   });
 
   // Return the currently logged in user
@@ -136,4 +145,37 @@ test("purchase with login", async ({ page }) => {
 
   // Check balance
   await expect(page.getByText("0.008")).toBeVisible();
+});
+
+test("purchase with register", async ({ page }) => {
+  await basicInit(page);
+
+  await page.getByRole("link", { name: "Order" }).click();
+  await page.getByRole("combobox").selectOption("4");
+  await page.getByRole("link", { name: "Image Description Veggie A" }).click();
+  await page.getByRole("link", { name: "Image Description Pepperoni" }).click();
+  await page.getByRole("button", { name: "Checkout" }).click();
+  await expect(page.locator("form")).toContainText(
+    "Are you new? Register instead.",
+  );
+  await page.getByRole("main").getByText("Register").click();
+  await expect(page.getByRole("heading")).toContainText("Welcome to the party");
+  await expect(page.locator("form")).toContainText(
+    "Already have an account? Login instead.",
+  );
+  await page.getByRole("textbox", { name: "Full name" }).click();
+  await page.getByRole("textbox", { name: "Full name" }).fill("Kai Chen");
+  await page.getByRole("textbox", { name: "Email address" }).click();
+  await page.getByRole("textbox", { name: "Email address" }).fill("d@jwt.com");
+  await page.getByRole("textbox", { name: "Password" }).click();
+  await page.getByRole("textbox", { name: "Password" }).fill("a");
+  await page.getByRole("button", { name: "Register" }).click();
+
+  await expect(page.getByRole("main")).toContainText(
+    "Send me those 2 pizzas right now!",
+  );
+
+  await expect(page.locator("tbody")).toContainText("Veggie");
+  await expect(page.locator("tbody")).toContainText("Pepperoni");
+  await expect(page.getByRole("main")).toContainText("0.008 ₿");
 });
