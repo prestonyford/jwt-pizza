@@ -58,15 +58,15 @@ async function basicInit(page: Page) {
 			await route.fulfill({ json: res });
 		}
 	});
-	
+
 	await page.route("*/**/api/franchise/*/store", async (route) => {
 		if (route.request().method() === "POST") {
-      		const createStoreReq = route.request().postDataJSON();
+			const createStoreReq = route.request().postDataJSON();
 			const res = {
 				id: "1",
 				franchiseId: "1",
-				name: createStoreReq.name
-			}
+				name: createStoreReq.name,
+			};
 			await route.fulfill({ json: res });
 		}
 	});
@@ -133,4 +133,38 @@ test("login create store", async ({ page }) => {
 	await page.getByRole("button", { name: "Create" }).click();
 
 	await expect(page.locator("tbody")).toContainText("store 1");
+});
+
+test("login close store", async ({ page }) => {
+	await basicInit(page);
+
+	await page.getByLabel("Global").getByRole("link", { name: "Franchise" })
+		.click();
+	await expect(page.getByRole("main")).toContainText(
+		"So you want a piece of the pie?",
+	);
+
+	await expect(page.getByRole("alert")).toContainText(
+		"If you are already a franchisee, pleaseloginusing your franchise account",
+	);
+	await page.getByRole("link", { name: "login", exact: true }).click();
+	await page.getByRole("textbox", { name: "Email address" }).click();
+	await page.getByRole("textbox", { name: "Email address" }).fill(
+		"pf@jwt.com",
+	);
+	await page.getByRole("textbox", { name: "Email address" }).press("Tab");
+	await page.getByRole("textbox", { name: "Password" }).fill("password");
+	await page.getByRole("button", { name: "Login" }).click();
+
+	await expect(page.locator("tbody")).toContainText("Close");
+	await page.getByRole("button", { name: "Close" }).nth(0).click();
+	await expect(page.getByRole("heading")).toContainText(
+		"Sorry to see you go",
+	);
+	await expect(page.getByRole("main")).toContainText(
+		"Are you sure you want to close the franchise 1 store store 1 ? This cannot be restored. All outstanding revenue will not be refunded.",
+	);
+	await expect(page.getByRole("button", { name: "Close" })).toBeVisible();
+	await expect(page.getByRole("button", { name: "Cancel" })).toBeVisible();
+	await page.getByRole("button", { name: "Close" }).click();
 });
