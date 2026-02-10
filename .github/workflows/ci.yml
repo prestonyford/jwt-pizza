@@ -22,8 +22,8 @@ jobs:
 
       - name: Run tests
         run: |
+          npm install
           npx playwright install --with-deps chromium
-          npm install -D nyc vite-plugin-istanbul playwright-test-coverage
           npm run test:coverage
 
       - name: Update coverage
