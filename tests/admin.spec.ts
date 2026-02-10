@@ -56,39 +56,46 @@ async function basicInit(page: Page) {
 				},
 			];
 			await route.fulfill({ json: res });
+		} else if (route.request().method() === "DELETE") {
+			route.fulfill({ json: {
+				message: "store deleted"
+			}});
 		}
 	});
 
-	await page.route("*/**/api/franchise?page=0&limit=3&name=*", async (route) => {
-		if (route.request().method() === "GET") {
-			const res = {
-				"franchises": [
-					{
-						"id": 149,
-						"name": "0edfkqzkk8",
-						"stores": [],
-					},
-					{
-						"id": 121,
-						"name": "0hivpvw1r7",
-						"stores": [
-							{
-								"id": 29,
-								"name": "gh406vbe71",
-							},
-						],
-					},
-					{
-						"id": 9,
-						"name": "0kj9mjyc5v",
-						"stores": [],
-					},
-				],
-				"more": true,
-			};
-			await route.fulfill({ json: res });
-		}
-	});
+	await page.route(
+		"*/**/api/franchise?page=0&limit=3&name=*",
+		async (route) => {
+			if (route.request().method() === "GET") {
+				const res = {
+					"franchises": [
+						{
+							"id": 149,
+							"name": "0edfkqzkk8",
+							"stores": [],
+						},
+						{
+							"id": 121,
+							"name": "0hivpvw1r7",
+							"stores": [
+								{
+									"id": 29,
+									"name": "gh406vbe71",
+								},
+							],
+						},
+						{
+							"id": 9,
+							"name": "0kj9mjyc5v",
+							"stores": [],
+						},
+					],
+					"more": true,
+				};
+				await route.fulfill({ json: res });
+			}
+		},
+	);
 
 	await page.route("*/**/api/user/me", async (route) => {
 		expect(route.request().method()).toBe("GET");
@@ -126,4 +133,41 @@ test("login admin view franchises", async ({ page }) => {
 	await expect(page.getByRole("table")).toContainText("Close");
 	await expect(page.getByRole("button", { name: "Add Franchise" }))
 		.toBeVisible();
+});
+
+test("login admin close franchise", async ({ page }) => {
+	await basicInit(page);
+
+	await page.getByLabel("Global").getByRole("link", { name: "Franchise" })
+		.click();
+	await expect(page.getByRole("main")).toContainText(
+		"So you want a piece of the pie?",
+	);
+
+	await expect(page.getByRole("alert")).toContainText(
+		"If you are already a franchisee, pleaseloginusing your franchise account",
+	);
+	await page.getByRole("link", { name: "login", exact: true }).click();
+	await page.getByRole("textbox", { name: "Email address" }).click();
+	await page.getByRole("textbox", { name: "Email address" }).fill(
+		"a@jwt.com",
+	);
+	await page.getByRole("textbox", { name: "Email address" }).press("Tab");
+	await page.getByRole("textbox", { name: "Password" }).fill("admin");
+	await page.getByRole("button", { name: "Login" }).click();
+
+	await page.getByRole("link", { name: "Admin" }).click();
+
+	await page.getByRole('row', { name: '0edfkqzkk8 Close' }).getByRole('button').click();
+		
+	await expect(page.getByRole("heading")).toContainText(
+		"Sorry to see you go",
+	);
+	await expect(page.getByRole("main")).toContainText(
+		"Are you sure you want to close the 0edfkqzkk8 franchise? This will close all associated stores and cannot be restored. All outstanding revenue will not be refunded.",
+	);
+	await expect(page.getByRole("button", { name: "Close" })).toBeVisible();
+	await page.getByRole("button", { name: "Close" }).click();
+	
+	await expect(page.locator("h2")).toContainText("Mama Ricci's kitchen");
 });
