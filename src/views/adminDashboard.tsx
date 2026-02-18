@@ -6,6 +6,7 @@ import Button from '../components/button';
 import { pizzaService } from '../service/service';
 import { Franchise, FranchiseList, Role, Store, User } from '../service/pizzaService';
 import { TrashIcon } from '../icons';
+import UsersTable from './admin/usersTable';
 
 interface Props {
   user: User | null;
@@ -44,6 +45,8 @@ export default function AdminDashboard(props: Props) {
     response = (
       <View title="Mama Ricci's kitchen">
         <div className="text-start py-8 px-4 sm:px-6 lg:px-8">
+          <h3 className="text-neutral-100 text-xl">Users</h3>
+          <UsersTable />
           <h3 className="text-neutral-100 text-xl">Franchises</h3>
           <div className="bg-neutral-100 overflow-clip my-4">
             <div className="flex flex-col">
