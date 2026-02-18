@@ -187,8 +187,8 @@ test("login admin view franchises", async ({ page }) => {
 	await page.getByRole("link", { name: "Admin" }).click();
 	await expect(page.locator("h2")).toContainText("Mama Ricci's kitchen");
 
-	await expect(page.getByRole("table")).toContainText("0edfkqzkk8");
-	await expect(page.getByRole("table")).toContainText("Close");
+	await expect(page.getByRole('cell', { name: '0edfkqzkk8' })).toBeVisible();
+	await expect(page.getByRole('button', { name: 'Close' }).first()).toBeVisible();
 	await expect(page.getByRole("button", { name: "Add Franchise" }))
 		.toBeVisible();
 });
