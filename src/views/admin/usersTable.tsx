@@ -1,17 +1,25 @@
 import React from 'react';
 import { User, UserList } from '../../service/pizzaService';
 import { TrashIcon } from '../../icons';
+import { pizzaService } from '../../service/service';
 
 interface Props {
 	users: User[];
 }
 
 export default function UsersTable() {
-  	const [page, setPage] = React.useState(0);
-  	const [usersList, setUsersList] = React.useState<UserList>({ users: [
-		{ id: "1", name: "Preston Ford", email: "a@jwt.com", roles: [] }
-	], more: false });
-  	const filterUsersRef = React.useRef<HTMLInputElement>(null);
+	const [page, setPage] = React.useState(0);
+	const [usersList, setUsersList] = React.useState<UserList>({
+		users: [], more: false
+	});
+	const filterUsersRef = React.useRef<HTMLInputElement>(null);
+
+	React.useEffect(() => {
+		(async () => {
+			const res = await pizzaService.getUsers(page, 3, '*')
+			setUsersList(res);
+		})();
+	}, [page]);
 
 	function deleteUser(user: User) {
 
@@ -40,11 +48,11 @@ export default function UsersTable() {
 								<tbody className="divide-y divide-gray-200">
 									{usersList.users.map((user, index) => {
 										return (
-											<tr className="border-neutral-500 border-t-2">
+											<tr key={user.id} className="border-neutral-500 border-t-2">
 												<td className="text-start px-2 whitespace-nowrap text-l font-mono text-orange-600">{user.id}</td>
 												<td className="text-start px-2 whitespace-nowrap text-sm font-normal text-gray-800">{user.name}</td>
 												<td className="text-start px-2 whitespace-nowrap text-sm font-normal text-gray-800">{user.email}</td>
-												<td className="text-start px-2 whitespace-nowrap text-sm font-normal text-gray-800">{JSON.stringify(user.roles)}</td>
+												<td className="text-start px-2 whitespace-nowrap text-sm font-normal text-gray-800">{user.roles?.map(role => role.role)?.join(', ') ?? ''}</td>
 												<td className="px-6 py-1 whitespace-nowrap text-end text-sm font-medium">
 													<button type="button" className="px-2 py-1 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-1 border-orange-400 text-orange-400  hover:border-orange-800 hover:text-orange-800" onClick={() => deleteUser(user)}>
 														<TrashIcon />
