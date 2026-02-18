@@ -2,12 +2,14 @@ import React from 'react';
 import { User, UserList } from '../../service/pizzaService';
 import { TrashIcon } from '../../icons';
 import { pizzaService } from '../../service/service';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
 	users: User[];
 }
 
 export default function UsersTable() {
+	const navigate = useNavigate();
 	const [page, setPage] = React.useState(0);
 	const [usersList, setUsersList] = React.useState<UserList>({
 		users: [], more: false
@@ -22,11 +24,12 @@ export default function UsersTable() {
 	}, [page]);
 
 	function deleteUser(user: User) {
-
+		navigate('/admin-dashboard/delete-user', { state: { user } });
 	}
 
-	function filterUsers() {
-
+	async function filterUsers() {
+		setPage(0);
+		setUsersList(await pizzaService.getUsers(0, 10, `*${filterUsersRef.current?.value}*`));
 	}
 
 	return (
