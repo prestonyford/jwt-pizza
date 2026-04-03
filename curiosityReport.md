@@ -1,25 +1,19 @@
 # Upptime.js Curiosity Report
-## What is Upptime?
-Upptime is an open-source uptime monitoring solution that uses GitHub as its entire backend. Instead of relying on traditional monitoring servers, Upptime leverages GitHub Actions, Issues, and Pages to check whether your website or API is online and publicly display its status.
+## What is Sentry?
+Sentry is an application monitoring and error-tracking platform that helps developers detect, diagnose, and fix issues in real time. Instead of waiting for users to report bugs, Sentry automatically captures errors as they happen in the browser and provides detailed context about what went wrong.
 
-It’s provides an easier approach to checking uptime because:
-- There’s no external server you manage
-- There’s no paid service required
-- Everything runs on your GitHub repository, no additional tech stack
-
-Upptime provides:
-- Automated uptime checks using GitHub Actions
-- Premade public status pages hosted with GitHub Pages
-- Incident tracking via GitHub Issues
+Sentry provides:
+- Real-time error tracking
+- Stack traces and debugging context which make it wasier to fix problems
+- Performance monitoring
+- Alerts and notifications
 
 ## Why Was I Curious About It?
-Most uptime monitoring tools are SaaS products that charge monthly fees.. I noticed this was a suggested potential topic for report and was interested in how Upptime fits into DevOps workflows, especially since it replaces traditional monitoring infrastructure with something free and easy: GitHub.
-I was also curious about how it works. I assumed GitHub wasn't just handing out free compute.
+Traditionally, QA focuses on testing before release. In reality, many bugs only appear in production. I was interested in how Sentry solves this problem cleanly by enabling error tracking that automated tests might miss. In my current work as a web developer, one of my coworkers is working on a rewrite of a legacy system that runs the browser. We haven't flipped the switch yet, but right now we run both the old and new systems and have code in place to compare the results to function calls. If they are different, we have the browser send a request to our logging server. I felt that Sentry solves a similar problem that I was facing in work, so I decided to look into it.
 
-It also made me wonder:
-- Can GitHub realistically act as a monitoring platform?
-- Is this approach reliable enough for real-world QA and DevOps?
-- Are there any tradeoffs?
+It also connects to DevOps ideas like:
+- Continuous monitoring
+- Fast feedback loops
+- Observability
 
 ## How it works
-When I started looking into Upptime, I was curious to see how
