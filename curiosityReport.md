@@ -25,7 +25,7 @@ Sentry.init({
   dsn: "https://your-key@sentry.io/project-id",
 });
 ```
-Sentry then automatically hooks into uncaught exceptions, promise rejections, etc through browser APIs like `window.onerror`, `window.onunhandledrejection`, `console.error`, etc.
+Sentry then automatically hooks into uncaught exceptions, promise rejections, etc through browser APIs like `window.onerror`, `window.onunhandledrejection`, `console.error`, etc. This makes it easy to integrate into an existing codebase, because you don't really need to add any new lines of code in order to start logging. It just works.
 
 When one of these things happen, Sentry collects lots of data, like:
 - Stack trace
