@@ -53,4 +53,4 @@ The data you receive typically looks like:
 Sentry provides a UI dashboard to view events, similar to Grafana. You can group error events by the kind of issue they represent, and view metrics like error frequency, affected users, timelines, etc.
 
 ## Final Thoughts
-I think Sentry is a good tool, and being able to log frontend errors in production to catch things automated tests can't is very useful. Though to be honest, this seems like something you could easily implement on your own instead of paying a lot of money for.
+I think Sentry is a good tool, and being able to log frontend errors in production to catch things automated tests can't is very useful. Though to be honest, this seems like something you could easily implement on your own instead of paying a lot of money for. I only explored the JavaScript sdk, since that is most applicable to me. But Sentry has SDKs for many languages and frameworks.
