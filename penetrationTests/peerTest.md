@@ -33,5 +33,16 @@ Peer names: Preston Ford, Anna Egbert
 | Classification | Injection |
 | Severity       | 2 |
 | Description    | Inputs not sanitized when updating user information. Allows for SQL injection which can write sensitive data of another user into your username. |
-| Images         | ![SQL injection](preston_attack3.png) <br/> This user used a SQL injection attack to overwrite their username to be another user's password hash. Their hashed password is then visible in the attacker's profile page. |
+| Images         | ![SQL injection](preston_attack3.png) <br/> ![SQL injection](preston_attack3_1.png) <br/>  This user used a SQL injection attack to overwrite their username to be another user's password hash. The victim's hashed password is then visible in the attacker's profile page. |
 | Corrections    | Sanitize inputs. |
+
+#### Attack 4
+| Item           | Result                                                                         |
+| -------------- | ------------------------------------------------------------------------------ |
+| Date           | April 12, 2026 |
+| Target         | pizza.pyford329.click |
+| Classification | Injection |
+| Severity       | 0 |
+| Description    | Attempted a XSS attack to run JavaScript in an admin's browser. Did not work, React escapes the HTML. |
+| Images         | ![XSS](preston_attack4.png) <br/> Attacker attempted XSS attack by making their username an HTML script tag with malicious code. |
+| Corrections    | None |
