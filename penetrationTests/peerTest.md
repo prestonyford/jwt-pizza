@@ -46,3 +46,14 @@ Peer names: Preston Ford, Anna Egbert
 | Description    | Attempted a XSS attack to run JavaScript in an admin's browser. Did not work, React escapes the HTML. |
 | Images         | ![XSS](preston_attack4.png) <br/> Attacker attempted XSS attack by making their username an HTML script tag with malicious code. |
 | Corrections    | None |
+
+#### Attack 5
+| Item           | Result                                                                         |
+| -------------- | ------------------------------------------------------------------------------ |
+| Date           | April 12, 2026 |
+| Target         | pizza.pyford329.click |
+| Classification | Insecure Design |
+| Severity       | 5 |
+| Description    | Chaos testing endpoint was left in and is present in production. Causes orders to fail 50% of the time. |
+| Images         | ![Failed order](preston_attack5.png) <br/> Order failed after attacker hit the chaos testing endpoint. |
+| Corrections    | Remove the chaos testing endpoint. |
