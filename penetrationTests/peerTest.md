@@ -57,3 +57,60 @@ Peer names: Preston Ford, Anna Egbert
 | Description    | Chaos testing endpoint was left in and is present in production. Causes orders to fail 50% of the time. |
 | Images         | ![Failed order](preston_attack5.png) <br/> Order failed after attacker hit the chaos testing endpoint. |
 | Corrections    | Remove the chaos testing endpoint. |
+
+## Peer Attack
+### Preston -> Anna
+#### Attack 1
+| Item           | Result                                                                         |
+| -------------- | ------------------------------------------------------------------------------ |
+| Date           | April 14, 2026 |
+| Target         | pizza.afjwtpizza.click |
+| Classification | Insecure Design |
+| Severity       | 0 |
+| Description    | Attempted to overload the server with bad login requests to brute force different combinations of passwords, however precautions were made to prevent too many authentication attempts.
+| Images         | ![Failed login](auth-cooldown.png) |
+| Corrections    | None |
+
+#### Attack 2
+| Item           | Result                                                                         |
+| -------------- | ------------------------------------------------------------------------------ |
+| Date           | April 14, 2026 |
+| Target         | pizza.afjwtpizza.click |
+| Classification | Security Misconfiguration |
+| Severity       | 1 |
+| Description    | Production code is built with sourcemaps, allowing end users to see source code with comments. This makes it easier for attackers to find vulnerabilities by investigating the code to discover API structure and internal business logic. For example, the source code of certain components could be investigated to find XSS vulnerabilities. It could also reveal feature flags, API keys left in by mistake, and reveal proprietary code. |
+| Images         | ![Sourcemaps](sourcemaps.png) |
+| Corrections    | Build code without sourcemaps |
+
+#### Attack 3
+| Item           | Result                                                                         |
+| -------------- | ------------------------------------------------------------------------------ |
+| Date           | April 14, 2026 |
+| Target         | pizza.afjwtpizza.click |
+| Classification | Security Misconfiguration |
+| Severity       | 0 |
+| Description    | Pizza ordering sends the price with the request. I thought this could be used to purchase a jwt pizza at a different price than is listed, however the backend does not actually use this field in the request. |
+| Images         | None |
+| Corrections    | None |
+
+#### Attack 4
+| Item           | Result                                                                         |
+| -------------- | ------------------------------------------------------------------------------ |
+| Date           | April 14, 2026 |
+| Target         | pizza.afjwtpizza.click |
+| Classification | Broken Access Control |
+| Severity       | 0 |
+| Description    | Attempted to hit the user list endpoint as a non-admin, however access was blocked. If it was not blocked, sensitive information about other users registered with JWT Pizza could have been obtained. |
+| Images         | None |
+| Corrections    | None |
+
+#### Attack 5
+| Item           | Result                                                                         |
+| -------------- | ------------------------------------------------------------------------------ |
+| Date           | April 14, 2026 |
+| Target         | pizza.afjwtpizza.click |
+| Classification | Injection |
+| Severity       | 0 |
+| Description    | Attempted to put a SQL injection to obtain other user information or to drop the database, but the queries are sanitized and the attempts did not work. `curl 'https://pizza-service.afjwtpizza.click/api/auth'-X POST -H 'Content-Type: application/json' --data-raw '{"name":"DROP DATABASE pizza;","email":"test@test.com","password":"test"}'`
+| Images         | None |
+| Corrections    | None |
